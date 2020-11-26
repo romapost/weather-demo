@@ -1,5 +1,13 @@
 version: '3'
 services:
+  redis:
+    image: redis:latest
+    command: ["redis-server"]
+    hostname: redis
+    networks:
+      - internal
+    volumes:
+      - ./data/redis:/data
   php-fpm:
     build:
       context: docker/php-fpm
@@ -10,6 +18,8 @@ services:
       PHP_IDE_CONFIG: "serverName=Docker"
     networks:
       - internal
+    depends_on:
+      - redis
   nginx:
     build:
       context: docker/nginx
